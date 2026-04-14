@@ -1,0 +1,103 @@
+[TITLE]
+;;项目标题
+Test SWMM Model with LISFLOOD-FP Coupling
+
+[OPTIONS]
+;;分析选项
+FLOW_UNITS           CFS
+INFILTRATION         HORTON
+FLOW_ROUTING         DYNWAVE
+START_DATE           01/01/2020
+START_TIME           00:00:00
+END_DATE             01/01/2020
+END_TIME             06:00:00
+REPORT_START_DATE    01/01/2020
+REPORT_START_TIME    00:00:00
+SWEEP_START          JAN 1
+SWEEP_END            DEC 31
+DRY_DAYS             0
+WET_STEP             60
+DRY_STEP             3600
+ROUTING_STEP         60
+REPORT_STEP          300
+ALLOW_PONDING        NO
+INERTIAL_DAMPING     PARTIAL
+NORMAL_FLOW_LIMITED  BOTH
+FORCE_MAIN_EQUATION  H_W
+LINK_OFFSETS         DEPTH
+MIN_SLOPE            0
+SKIP_STEADY_STATE    NO
+
+[EVAPORATION]
+;;蒸发数据
+CONSTANT             0.0
+
+[RAINGAGE]
+;;雨量计
+Name             Type       Interval SCF      Source
+RG1              TIMESERIES 60       1.0      RAINFALL
+
+[TIMESERIES]
+;;时间序列 (rainfall data)
+RAINFALL  01/01/2020  00:00  0
+RAINFALL  01/01/2020  01:00  0.5
+RAINFALL  01/01/2020  02:00  1.2
+RAINFALL  01/01/2020  03:00  0.8
+RAINFALL  01/01/2020  04:00  0.3
+RAINFALL  01/01/2020  05:00  0.1
+RAINFALL  01/01/2020  06:00  0
+
+[SUBCATCHMENT]
+;;子流域
+Name             Raingage        Outlet           Area     PercentImp  Width    PercentSlope CurbLen SnowPack
+Sub1             RG1             N1               10       50          500      0.5          0
+
+[SUBAREAROUTING]
+;;子流域路由
+Outlet           Type             Fraction
+Sub1             OUTLET           1.0
+
+[INFILTRATION]
+;;入渗参数
+Subcatch         Suction     InitDef    ConductK
+Sub1             3.5         0.2        0.5
+
+[JUNCTIONS]
+;;接点
+Name             Elev       MaxDepth   InitDepth  SurDepth   Aponded
+N1               10         2.0        0          0          100
+N2               9          2.0        0          0          100
+
+[OUTFALLS]
+;;出口
+Name             Elev       Type       StageData  Gated    Route
+Out1             5          FREE       -1         NO       
+
+[CONDUITS]
+;;管道
+Name             From Node  To Node    Length     Roughness  InOffset  OutOffset  InitFlow   MaxFlow
+Pipe1            N1         N2         500        0.012      0         0          0          0
+Pipe2            N2         Out1       500        0.012      0         0          0          0
+
+[XSECTIONS]
+;;截面
+Link             Shape        Geom1        Geom2  Geom3  Geom4  Barrels    Culvert
+Pipe1            CIRCULAR     0.5          0      0      0      1
+Pipe2            CIRCULAR     0.5          0      0      0      1
+
+[LOSSES]
+;;损失参数
+Link             Inlet      Outlet     Average    Flap Gate
+Pipe1            0.0        0.0        0          NO
+Pipe2            0.0        0.0        0          NO
+
+[CONTROLS]
+;;控制规则
+;;(可选)
+
+[REPORT]
+;;报告设置
+VARIABLES        INPUT
+INPUT            TIMESERIES TIMESERIES
+VARIABLES        NODE INVERT DEPTH VOLUME LATFLOW OVERFLOW QUAL
+VARIABLES        LINK FLOW DEPTH VELOCITY FROUDE

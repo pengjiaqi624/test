@@ -1,0 +1,38 @@
+[LISFLOOD]
+;;基本参数
+DEMfile		E:\Program\SWMM-and-LISFLOOD-FP-master\data\dem.asc
+ResFile		result.asc
+
+;;时间设置
+timestep		1.0
+simulation_time		 21600
+
+;;空间参数
+xllcorner		 0.0
+yllcorner		0.0
+cellsize 		10.0
+nrows		100
+ncols		100
+
+;;水文参数
+manning		 0.03
+theta		 0.9
+
+;;数值方法
+boundary_from_dem		1
+fp_rain		1.0
+
+;;输出设置
+mass_balance_file		mass_balance.txt
+depth_grids		1
+save_depth_grids		result
+
+;;耦合参数
+cpl_rainfall		0
+cpl_inflow		0
+
+;;调试选项
+debug		0
+
+initial_depth		0.01
+rainfall		0
